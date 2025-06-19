@@ -538,7 +538,8 @@ cp -n -d data/assets/ssl-example/*.pem data/assets/ssl/
 # Set app_info.inc.php
 case ${git_branch} in
   master)
-    mailcow_git_version=$(git describe --tags `git rev-list --tags --max-count=1`)
+    mailcow_git_version=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null || git rev-parse --short HEAD)
+    mailcow_last_git_version=""
     ;;
   nightly)
     mailcow_git_version=$(git rev-parse --short $(git rev-parse @{upstream}))
@@ -553,15 +554,6 @@ case ${git_branch} in
     mailcow_last_git_version=""
     ;;
 esac
-# if [ ${git_branch} == "master" ]; then
-#   mailcow_git_version=$(git describe --tags `git rev-list --tags --max-count=1`)
-# elif [ ${git_branch} == "nightly" ]; then
-#   mailcow_git_version=$(git rev-parse --short $(git rev-parse @{upstream}))
-#   mailcow_last_git_version=""
-# else
-#   mailcow_git_version=$(git rev-parse --short HEAD)
-#   mailcow_last_git_version=""
-# fi
 
 if [[ $SKIP_BRANCH != "y" ]]; then
 mailcow_git_commit=$(git rev-parse origin/${git_branch})
